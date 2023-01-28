@@ -3,9 +3,15 @@
  * @param {string} userName 
  */
 
-const {getUserInfo, createUser} = require('../services/user')
+const {getUserInfo, createUser, updateUser} = require('../services/user')
 const {ErrorModel, SuccessModel} = require('../model/ResModel')
-const { registerUserNameNotExistInfo, registerUserNameExistInfo,registerFailInfo,loginFailInfo} = require('../model/ErrorInfo')
+const { registerUserNameNotExistInfo, 
+     registerUserNameExistInfo,
+     registerFailInfo,
+     loginFailInfo,
+     changeInfoFailInfo,
+     changePasswordFailInfo} = require('../model/ErrorInfo')
+
 const doCrypto = require('../utils/cryp')
 
 /**
@@ -72,10 +78,77 @@ async function login(ctx, userName, password) {
      return new SuccessModel()
 }
 
+/**
+ * 修改个人信息
+ * @param {Object} ctx 
+ * @param {Obkect} param1 
+ */
+async function changeInfo(ctx, {nickName, city, picture}) {
+     const userName = ctx.session.userInfo
+     if (!nickName) {
+          nickName = userName
+     }
+     const result = await updateUser(
+          {
+               newNickname:nickName,
+               newCity:city,
+               newPicture:picture
+          },
+          {userName}
+     )
+
+     //执行成功
+     if (result) {
+          Object.assign(ctx.session.userInfo, {
+               nickName,
+               city,
+               picture
+          })
+      return new SuccessModel()
+     }
+     //失败
+     return new ErrorModel(changeInfoFailInfo)
+}
+
+/**
+ * 修改个人密码
+ * @param {Object} param0 
+ */
+async function changePassword({userName, password, newPassword}) {
+     const result = await updateUser(
+          {
+               newPassword:doCrypto(newPassword)
+          },
+          {
+               userName,
+               password:doCrypto(password)
+          }
+     )
+
+     if (result) {
+          return new SuccessModel()
+     }
+
+     return new ErrorModel(changePasswordFailInfo)
+}
+
+
+/**
+ * 推出登录
+ * @param {Object} ctx 
+ * @returns 
+ */
+async function logout(ctx) {
+     delete ctx.session.userInfo
+     return new SuccessModel()
+}
 
 module.exports =  {
     isExist,
     register,
-    login
+    login,
+    changeInfo,
+    changePassword,
+    logout
 }
 
