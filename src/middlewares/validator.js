@@ -14,7 +14,7 @@ function genValidator(validateFn) {
     // 定义中间件函数
     async function validator(ctx, next) {
         const data = ctx.request.body
-        validateFn(data)
+        const error= validateFn(data)
         if (error) {
             //验证失败
             ctx.body = new ErrorModule(jsonSchemaFileInfo)

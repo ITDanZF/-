@@ -1,14 +1,14 @@
+
+
+const {User} = require('../db/model/index')
+const {formatUser} = require('./_format')
 /**
  * 获取用户信息
  * @param {string} userName 用户名 
  * @param {string} password 密码
  */
-
-const {User} = require('../db/model/index')
-const {formatUser} = require('./_format')
-
-
 async function getUserInfo(userName, password) {
+    
      //查询条件
      const whereOpt = {
         userName

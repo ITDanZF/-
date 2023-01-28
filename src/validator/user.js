@@ -3,7 +3,7 @@
  * @description user 数据格式校验
  * @author 玉
  */
-const {validate} = require('./validate')
+const validate = require('./validate')
 
 const SCHEMA = {
     type: 'object',
