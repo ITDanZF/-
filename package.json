@@ -30,7 +30,8 @@
     "mysql2": "^3.0.1",
     "path": "^0.12.7",
     "redis": "^4.6.1",
-    "sequelize": "^6.28.0"
+    "sequelize": "^6.28.0",
+    "xss": "^1.0.14"
   },
   "devDependencies": {
     "nodemon": "^1.19.4"
